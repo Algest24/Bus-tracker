@@ -1,7 +1,6 @@
 from kivymd.app import MDApp
 from kivy.app import App
 from kivy.lang import Builder
-from kivymd.uix.button import MDRaisedButton
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.menu import MDDropdownMenu
@@ -9,15 +8,14 @@ from kivy.properties import ObjectProperty
 from kivy.garden.mapview import MapView
 from kivymd.theming import ThemeManager
 import sqlite3
-
-
+from kivymd.uix.list import MDList, OneLineListItem
 class FirstWindow(Screen):
     pass
 
 
 class SecondWindow(Screen):
 	def login_button_pressed(self):
-		db = sqlite3.connect('itproger.db')
+		db = sqlite3.connect('bus.db')
 		c = db.cursor()
 		c.execute('''
 		CREATE TABLE IF NOT EXISTS Drivers (
@@ -59,19 +57,23 @@ class SecondWindow(Screen):
 
 		db.commit()
 		db.close()
-					
+
 class MapWindow(Screen):
-    menu = ObjectProperty(None)  # Define a property to hold the dropdown menu
+    menu = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(MapWindow, self).__init__(**kwargs)
 
         # Create menu items
         menu_items = [
-            {
-                "text": f"Item {i}",
-                "on_release": lambda x=f"Item {i}": self.menu_callback(x),
-            } for i in range(3)
+			{
+				"text": "О приложении",
+				"on_release": lambda: self.show_about(),
+			},
+			{
+				"text": "Выход",
+				"on_release": lambda: self.switch_to_first_window(),
+			}
         ]
 
         # Create the dropdown menu
@@ -80,26 +82,39 @@ class MapWindow(Screen):
     def menu_callback(self, text_item):
         self.menu.dismiss()
         Snackbar(text=text_item).open()
+    def show_about(self):
+        self.manager.current = 'AboutAPP'
 
-    def map_button_action(self):
-        pass
+    def switch_to_first_window(self):
+        self.manager.current = 'first'
 
-    def board_button_action(self):
-        pass
-
-    # Метод для открытия меню, вызывается из вашего KV файла
+    # Метод для открытия меню из KV файла
     def open_menu(self, button):
         self.menu.caller = button
         self.menu.open()
-		
+
 class CallboardWindow(Screen):
 	pass
 
 class WindowManager(ScreenManager):
     pass
 
+class Stops(Screen):
+	pass
+	#def build(self):
+	#	screen = Screen()
 
+#		list_view = MDList()
+#		item1 = OneLineListItem(text='Тест 1')
+#		item2 = OneLineListItem(text='Тест 2')
 
+#		list_view.add_widget(item1)
+#		list_view.add_widget(item2)
+		
+#		screen.add_widget(list_view)
+#		return screen
+class AboutAPP(Screen):
+	pass
 
 class AwesomeApp(MDApp):
 	theme_cls = ThemeManager()      

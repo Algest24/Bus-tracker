@@ -5,6 +5,8 @@ WindowManager:
     SecondWindow:
     MapWindow:
     CallboardWindow:
+    Stops:
+    AboutAPP:
 
 <FirstWindow>:
     name: "first"
@@ -21,7 +23,7 @@ WindowManager:
         MDRaisedButton:
             text: "Войти как пользователь"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            on_release: root.user_button_pressed()
+            on_release: app.root.current = "map"
 
         MDRaisedButton:
             text: "Войти как водитель"
@@ -54,7 +56,7 @@ WindowManager:
             pos_hint: {'center_x': 0.5}
             size_hint_x: None
             width: 200
-            password: True  # Скрытие пароля
+            password: True
 
         MDRaisedButton:
             text: "Войти"
@@ -86,9 +88,12 @@ WindowManager:
             spacing: dp(10)
 
             MDFlatButton:
-                text: "Карта"
+                text: "Остановки"
                 md_bg_color: app.theme_cls.primary_color
                 size_hint_x: 1
+                on_release:
+                    app.root.current = "Stops"
+                    root.manager.transition.direction = "up"
 
             MDFlatButton:
                 text: "Доска объявлений"
@@ -113,5 +118,63 @@ WindowManager:
             text: "Вернутся на карту"
             pos_hint: {'center_x': 0.5}
             on_release: 
+                app.root.current = "map"
+                root.manager.transition.direction = "down"
+
+
+
+<Stops>:
+    name: "Stops"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        theme_style: "Dark"
+
+
+
+        MDRaisedButton:
+            text: "Вернуться на карту"
+            pos_hint: {'center_x': 0.5}
+            on_release:
+                app.root.current = "map"
+                root.manager.transition.direction = "down"
+
+
+
+<AboutAPP>:
+    name: "AboutAPP"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        theme_style: "Dark"
+        padding: 10
+        spacing: 10
+
+    Image:
+        source: 'logo.png'
+        size_hint: None, None  # Отключаем автоматическое масштабирование
+        size: dp(400), dp(250)  # Задаем размеры в dp (плотностно-независимые пиксели)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+
+    Label:
+        text: 'Приложение для удобного отслеживания маршрутов такси в Камышине.\nБыстро находите маршруты и следите за транспортом в реальном времени.'
+        size_hint: 1, 0.7
+        halign: 'center'
+        valign: 'middle'
+        text_size: self.width, None
+        color: 0, 0, 0, 1
+
+    Label:
+        text: 'Автор: Аверьянов Максим'
+        size_hint: 1, 0.5
+        halign: 'center'
+        valign: 'middle'
+        text_size: self.width, None
+        color: 0, 0, 0, 1
+
+        MDRaisedButton:
+            text: "Вернуться на карту"
+            pos_hint: {'center_x': 0.5}
+            on_release:
                 app.root.current = "map"
                 root.manager.transition.direction = "down"
