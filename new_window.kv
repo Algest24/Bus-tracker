@@ -23,7 +23,10 @@ WindowManager:
         MDRaisedButton:
             text: "Войти как пользователь"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            on_release: app.root.current = "map"
+            on_release: 
+                root.onmap()
+                app.root.current = "map"
+                        
 
         MDRaisedButton:
             text: "Войти как водитель"
@@ -81,6 +84,9 @@ WindowManager:
             lat: 50.0965
             lon: 45.4165
 
+            on_kv_post:
+                root.add_marker()
+
         MDBoxLayout:
             size_hint_y: None
             height: dp(48)
@@ -92,6 +98,7 @@ WindowManager:
                 md_bg_color: app.theme_cls.primary_color
                 size_hint_x: 1
                 on_release:
+                    root.white()
                     app.root.current = "Stops"
                     root.manager.transition.direction = "up"
 
@@ -127,17 +134,31 @@ WindowManager:
     name: "Stops"
 
     MDBoxLayout:
+        
         orientation: 'vertical'
         theme_style: "Dark"
 
+        ScrollView:
+            MDList:
+                id: stop_list
 
 
-        MDRaisedButton:
-            text: "Вернуться на карту"
-            pos_hint: {'center_x': 0.5}
-            on_release:
-                app.root.current = "map"
-                root.manager.transition.direction = "down"
+
+    MDRaisedButton:
+        text: "Показать"
+        pos_hint: {'center_x': 0.1}
+        on_release: 
+            root.create_stop_list()
+
+    MDRaisedButton:
+        text: "Вернуться на карту"
+        pos_hint: {'center_x': 0.5}
+        on_release:
+            root.onmap()
+            app.root.current = "map"
+            root.manager.transition.direction = "down"
+        on_kv_post:
+            root.create_stop_list()
 
 
 
@@ -150,31 +171,32 @@ WindowManager:
         padding: 10
         spacing: 10
 
-    Image:
-        source: 'logo.png'
-        size_hint: None, None  # Отключаем автоматическое масштабирование
-        size: dp(400), dp(250)  # Задаем размеры в dp (плотностно-независимые пиксели)
-        pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        Image:
+            source: 'logo.png'
+            size_hint: None, None  # Отключаем автоматическое масштабирование
+            size: dp(400), dp(250)  # Задаем размеры в dp (плотностно-независимые пиксели)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
 
-    Label:
-        text: 'Приложение для удобного отслеживания маршрутов такси в Камышине.\nБыстро находите маршруты и следите за транспортом в реальном времени.'
-        size_hint: 1, 0.7
-        halign: 'center'
-        valign: 'middle'
-        text_size: self.width, None
-        color: 0, 0, 0, 1
+        Label:
+            text: 'Приложение для удобного отслеживания маршрутов такси в Камышине.\nБыстро находите маршруты и следите за транспортом в реальном времени.'
+            size_hint: 1, 0.7
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            color: 0, 0, 0, 1
 
-    Label:
-        text: 'Автор: Аверьянов Максим'
-        size_hint: 1, 0.5
-        halign: 'center'
-        valign: 'middle'
-        text_size: self.width, None
-        color: 0, 0, 0, 1
+        Label:
+            text: 'Автор: Аверьянов Максим'
+            size_hint: 1, 0.5
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            color: 0, 0, 0, 1
 
         MDRaisedButton:
             text: "Вернуться на карту"
             pos_hint: {'center_x': 0.5}
-            on_release:
+            on_release: 
+                root.onmap()
                 app.root.current = "map"
                 root.manager.transition.direction = "down"
