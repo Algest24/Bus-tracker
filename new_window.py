@@ -176,19 +176,33 @@ class Stops(Screen):
 #		return screen
 
 	def create_stop_list(self):
-			global stops_data
-			
-
 			stop_list = self.ids.stop_list
 
 			for item in stops_data:
-				name =item["name"]
-				item = OneLineListItem(text=name)
-				item.bind(on_release=lambda item, name=name: self.on_stop_selected(name))
-				stop_list.add_widget(item)
-	def on_stop_selected(self, name):
-		app = App.get_running_app()
-		app.set_dark_theme()
+				name = item["name"]
+				coordinates = item["coordinates"]
+				item_widget = OneLineListItem(text=name)
+				item_widget.bind(on_release=lambda widget, name=name, coordinates=coordinates : self.on_stop_selected(widget, name, coordinates))
+				stop_list.add_widget(item_widget)
+
+	def on_stop_selected(self, widget, name, coordinates):
+			print(name)
+			print(coordinates)
+			app = App.get_running_app()
+			app.set_dark_theme()
+
+			# Получаем доступ к экземпляру MapView
+			map_view = self.manager.get_screen("map").ids.map_view
+
+			
+			# Перемещаем карту к указанным координатам
+			map_view.center_on(*coordinates)
+			# self.manager.get_screen("map").ids.map_view.zoom = 30 крашит и не видно меток
+			self.manager.transition.direction = "down"
+			self.manager.current = "map"
+			# Применить анимацию перехода
+			
+			
 		
 class AboutAPP(Screen):
 	def onmap(self):
